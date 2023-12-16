@@ -16,7 +16,7 @@ app.post("/api",(req, res) => {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({
-      model: "llama2",
+      model: "mistral",
       prompt: "I am a boy of 20years, I am a graduate, and from african descent. Also I am married. What return the key metrics about me from this above text in a json object only return a json object",
       system: 'You are a very brilliant individual',
       stream: false,

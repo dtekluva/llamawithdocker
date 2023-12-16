@@ -31,7 +31,7 @@ app.post("/api",(req, res) => {
 
     // const extractedJSON = extractJSONFromMarkdown(strData);
 
-        console.log(jsonData);
+        console.log(data);
         res.json(JSON.parse(data));
     });
 });

@@ -8,6 +8,8 @@ const cors = require("cors");
 const app = express();
 const port = 8004;
 
+app.use(express.json());
+
 // Routes
 app.post("/api",(req, res) => {
   // Send message to Model API

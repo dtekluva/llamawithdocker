@@ -9,7 +9,7 @@ WORKDIR /app
 RUN curl https://ollama.ai/install.sh | sh
 
 # Install dependencies for your Node.js application
-RUN npm install --save-dev 
+RUN npm install --save-dev
 
 # Copy Node.js application files
 COPY . ./

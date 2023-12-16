@@ -29,7 +29,7 @@ app.post("/api",(req, res) => {
   .then(data=>{
     var strData = data["response"] ;
 
-    const extractedJSON = extractJSONFromMarkdown(markdownText);
+    const extractedJSON = extractJSONFromMarkdown(strData);
 
         console.log(jsonData);
         res.json(JSON.parse(data));

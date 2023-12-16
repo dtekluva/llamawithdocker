@@ -70,6 +70,26 @@ There is a python file (make_request.py) in the root directory for testing
 - node-fetch
 - cors
 
+
+# Scalable Language Model Deployment
+
+This repository documents the efforts to deploy and scale a language model, specifically the Mistral model, on a GPU platform called Paperspace. The application is currently being served over a Node.js server, successfully integrating the Mistral model.
+
+## Deployment Overview
+
+### Successful Deployment
+
+- **Model Deployment**: Mistral model deployed on a GPU platform.
+- **Server Integration**: Application successfully served over a Node.js server.
+
+### Current Challenges
+
+1. **Containerization**: Exploring the containerization of the application for easier deployment and scaling.
+2. **JSON Response**: Ensuring the Mistral model consistently returns JSON as the response.
+
+## Getting Started
+
+
 ## Contributing
 
 Feel free to open an issue or submit a pull request.

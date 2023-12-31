@@ -1,0 +1,26 @@
+apiVersion: "apps/v1"
+kind: "Deployment"
+metadata:
+  name: getlinked-locust-worker
+  labels:
+    name: getlinked-locust-worker
+spec:
+  replicas: 5
+  selector:
+    matchLabels:
+      app: getlinked-locust-worker
+  template:
+    metadata:
+      labels:
+        app: getlinked-locust-worker
+    spec:
+      containers:
+        - name: getlinked-locust-worker
+          image: gcr.io/plasma-shift-409609/getlinked-locust-tester:latest
+          env:
+            - name: LOCUST_MODE
+              value: worker
+            - name: LOCUST_MASTER
+              value: locust-master
+            - name: TARGET_HOST
+              value: $TARGET

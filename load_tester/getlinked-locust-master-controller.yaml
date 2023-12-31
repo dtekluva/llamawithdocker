@@ -1,0 +1,34 @@
+apiVersion: "apps/v1"
+kind: "Deployment"
+metadata:
+  name: getlinked-locust-master
+  labels:
+    name: getlinked-locust-master
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: getlinked-locust-master
+  template:
+    metadata:
+      labels:
+        app: getlinked-locust-master
+    spec:
+      containers:
+        - name: getlinked-locust-master
+          image: gcr.io/plasma-shift-409609/getlinked-locust-tester:latest
+          env:
+            - name: LOCUST_MODE
+              value: master
+            - name: TARGET_HOST
+              value: $TARGET
+          ports:
+            - name: loc-master-web
+              containerPort: 8089
+              protocol: TCP
+            - name: loc-master-p1
+              containerPort: 5557
+              protocol: TCP
+            - name: loc-master-p2
+              containerPort: 5558
+              protocol: TCP

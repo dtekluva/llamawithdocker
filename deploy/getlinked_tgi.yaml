@@ -1,0 +1,528 @@
+swagger: '2.0'
+info:
+  contact:
+    name: Olivier Dehaene
+  description: Text Generation Webserver
+  license:
+    name: Apache 2.0
+    url: 'https://www.apache.org/licenses/LICENSE-2.0'
+  title: GetLinked Text Generation Inference Server
+  version: 0.6.0
+host: "getlinked-api.endpoints.plasma-shift-409609.cloud.goog"
+paths:
+  /:
+    post:
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: body
+          required: true
+          schema:
+            $ref: '#/definitions/CompatGenerateRequest'
+      responses:
+        '200':
+          description: See /generate or /generate_stream
+        '422':
+          description: Input validation error
+          examples:
+            application/json:
+              error: Input validation error
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+        '424':
+          description: Generation Error
+          examples:
+            application/json:
+              error: Request failed during generation
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+        '429':
+          description: Model is overloaded
+          examples:
+            application/json:
+              error: Model is overloaded
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+        '500':
+          description: Incomplete generation
+          examples:
+            application/json:
+              error: Incomplete generation
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+      tags:
+        - Text Generation Inference
+      description: >-
+        Generate tokens if `stream == false` or a stream of token if `stream ==
+        true`
+      operationId: compat_generate
+      summary: >-
+        Generate tokens if `stream == false` or a stream of token if `stream ==
+        true`
+  /generate:
+    post:
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: body
+          required: true
+          schema:
+            $ref: '#/definitions/GenerateRequest'
+      responses:
+        '200':
+          description: Generated Text
+          schema:
+            $ref: '#/definitions/GenerateResponse'
+        '422':
+          description: Input validation error
+          examples:
+            application/json:
+              error: Input validation error
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+        '424':
+          description: Generation Error
+          examples:
+            application/json:
+              error: Request failed during generation
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+        '429':
+          description: Model is overloaded
+          examples:
+            application/json:
+              error: Model is overloaded
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+        '500':
+          description: Incomplete generation
+          examples:
+            application/json:
+              error: Incomplete generation
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+      tags:
+        - Text Generation Inference
+      description: Generate tokens
+      operationId: generate
+      summary: Generate tokens
+  /generate_stream:
+    post:
+      consumes:
+        - application/json
+      produces:
+        - text/event-stream
+      parameters:
+        - in: body
+          name: body
+          required: true
+          schema:
+            $ref: '#/definitions/GenerateRequest'
+      responses:
+        '200':
+          description: Generated Text
+          schema:
+            $ref: '#/definitions/StreamResponse'
+        '422':
+          description: Input validation error
+          examples:
+            text/event-stream:
+              error: Input validation error
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+        '424':
+          description: Generation Error
+          examples:
+            text/event-stream:
+              error: Request failed during generation
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+        '429':
+          description: Model is overloaded
+          examples:
+            text/event-stream:
+              error: Model is overloaded
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+        '500':
+          description: Incomplete generation
+          examples:
+            text/event-stream:
+              error: Incomplete generation
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+      tags:
+        - Text Generation Inference
+      description: Generate a stream of token using Server-Sent Events
+      operationId: generate_stream
+      summary: Generate a stream of token using Server-Sent Events
+  /info:
+    get:
+      produces:
+        - application/json
+      parameters: []
+      responses:
+        '200':
+          description: Served model info
+          schema:
+            $ref: '#/definitions/Info'
+      tags:
+        - Text Generation Inference
+      description: Text Generation Inference endpoint info
+      operationId: get_model_info
+      summary: Text Generation Inference endpoint info
+  /metrics:
+    get:
+      produces:
+        - text/plain
+      parameters: []
+      responses:
+        '200':
+          description: Prometheus Metrics
+          schema:
+            type: string
+      tags:
+        - Text Generation Inference
+      description: Prometheus metrics scrape endpoint
+      operationId: metrics
+      summary: Prometheus metrics scrape endpoint
+definitions:
+  BestOfSequence:
+    properties:
+      finish_reason:
+        $ref: '#/definitions/FinishReason'
+      generated_text:
+        example: test
+        type: string
+      generated_tokens:
+        example: 1
+        format: int32
+        minimum: 0
+        type: integer
+      prefill:
+        items:
+          $ref: '#/definitions/PrefillToken'
+        type: array
+      seed:
+        example: 42
+        format: int64
+        minimum: 0
+        type: integer
+        x-nullable: true
+      tokens:
+        items:
+          $ref: '#/definitions/Token'
+        type: array
+    required:
+      - generated_text
+      - finish_reason
+      - generated_tokens
+      - prefill
+      - tokens
+    type: object
+  CompatGenerateRequest:
+    properties:
+      parameters:
+        $ref: '#/definitions/GenerateParameters'
+      inputs:
+        example: My name is Olivier and I
+        type: string
+      stream:
+        type: boolean
+    required:
+      - inputs
+    type: object
+  Details:
+    properties:
+      best_of_sequences:
+        items:
+          $ref: '#/definitions/BestOfSequence'
+        type: array
+        x-nullable: true
+      finish_reason:
+        $ref: '#/definitions/FinishReason'
+      generated_tokens:
+        example: 1
+        format: int32
+        minimum: 0
+        type: integer
+      prefill:
+        items:
+          $ref: '#/definitions/PrefillToken'
+        type: array
+      seed:
+        example: 42
+        format: int64
+        minimum: 0
+        type: integer
+        x-nullable: true
+      tokens:
+        items:
+          $ref: '#/definitions/Token'
+        type: array
+    required:
+      - finish_reason
+      - generated_tokens
+      - prefill
+      - tokens
+    type: object
+  ErrorResponse:
+    properties:
+      error:
+        type: string
+      error_type:
+        type: string
+    required:
+      - error
+      - error_type
+    type: object
+  FinishReason:
+    enum:
+      - length
+      - eos_token
+      - stop_sequence
+    type: string
+  GenerateParameters:
+    properties:
+      best_of:
+        default: 'null'
+        example: 1
+        exclusiveMinimum: false
+        minimum: 0
+        type: integer
+        x-nullable: true
+      details:
+        default: 'true'
+        type: boolean
+      do_sample:
+        default: 'false'
+        example: true
+        type: boolean
+      max_new_tokens:
+        default: '20'
+        exclusiveMaximum: true
+        exclusiveMinimum: false
+        format: int32
+        minimum: 0
+        type: integer
+      repetition_penalty:
+        default: 'null'
+        example: 1.03
+        exclusiveMinimum: false
+        format: float
+        type: number
+        x-nullable: true
+      return_full_text:
+        default: 'null'
+        example: false
+        type: boolean
+        x-nullable: true
+      seed:
+        default: 'null'
+        example: 'null'
+        exclusiveMinimum: false
+        format: int64
+        minimum: 0
+        type: integer
+        x-nullable: true
+      stop:
+        example:
+          - photographer
+        items:
+          type: string
+        maxItems: 4
+        type: array
+      temperature:
+        default: 'null'
+        example: 0.5
+        exclusiveMinimum: false
+        format: float
+        type: number
+        x-nullable: true
+      top_k:
+        default: 'null'
+        example: 10
+        exclusiveMinimum: false
+        format: int32
+        type: integer
+        x-nullable: true
+      top_p:
+        default: 'null'
+        example: 0.95
+        exclusiveMinimum: false
+        format: float
+        maximum: 1
+        type: number
+        x-nullable: true
+      truncate:
+        default: 'null'
+        example: 'null'
+        minimum: 0
+        type: integer
+        x-nullable: true
+      typical_p:
+        default: 'null'
+        example: 0.95
+        exclusiveMinimum: false
+        format: float
+        maximum: 1
+        type: number
+        x-nullable: true
+      watermark:
+        default: 'false'
+        example: true
+        type: boolean
+    type: object
+  GenerateRequest:
+    properties:
+      parameters:
+        $ref: '#/definitions/GenerateParameters'
+      inputs:
+        example: My name is Olivier and I
+        type: string
+    required:
+      - inputs
+    type: object
+  GenerateResponse:
+    properties:
+      details:
+        allOf:
+          - $ref: '#/definitions/Details'
+        x-nullable: true
+      generated_text:
+        example: test
+        type: string
+    required:
+      - generated_text
+    type: object
+  Info:
+    properties:
+      model_id:
+        example: bigscience/blomm-560m
+        type: string
+      model_pipeline_tag:
+        example: text-generation
+        type: string
+        x-nullable: true
+      model_sha:
+        example: e985a63cdc139290c5f700ff1929f0b5942cced2
+        type: string
+        x-nullable: true
+      sha:
+        example: 'null'
+        type: string
+        x-nullable: true
+      version:
+        example: 0.5.0
+        type: string
+    required:
+      - model_id
+      - version
+    type: object
+  PrefillToken:
+    properties:
+      id:
+        example: 0
+        format: int32
+        minimum: 0
+        type: integer
+      logprob:
+        example: -0.34
+        format: float
+        type: number
+        x-nullable: true
+      text:
+        example: test
+        type: string
+    required:
+      - id
+      - text
+      - logprob
+    type: object
+  StreamDetails:
+    properties:
+      finish_reason:
+        $ref: '#/definitions/FinishReason'
+      generated_tokens:
+        example: 1
+        format: int32
+        minimum: 0
+        type: integer
+      seed:
+        example: 42
+        format: int64
+        minimum: 0
+        type: integer
+        x-nullable: true
+    required:
+      - finish_reason
+      - generated_tokens
+    type: object
+  StreamResponse:
+    properties:
+      details:
+        allOf:
+          - $ref: '#/definitions/StreamDetails'
+        x-nullable: true
+      generated_text:
+        default: 'null'
+        example: test
+        type: string
+        x-nullable: true
+      token:
+        $ref: '#/definitions/Token'
+    required:
+      - token
+    type: object
+  Token:
+    properties:
+      id:
+        example: 0
+        format: int32
+        minimum: 0
+        type: integer
+      logprob:
+        example: -0.34
+        format: float
+        type: number
+        x-nullable: true
+      special:
+        example: 'false'
+        type: boolean
+      text:
+        example: test
+        type: string
+    required:
+      - id
+      - text
+      - logprob
+      - special
+    type: object
+securityDefinitions:
+  apiKeyHeader:
+    in: header
+    name: X-API-KEY
+    type: apiKey
+  auth0_jwk:
+      authorizationUrl: ""
+      flow: "implicit"
+      type: "oauth2"
+      # Replace YOUR-ACCOUNT-NAME with your Auth0 account name.
+      x-google-issuer: "https://YOUR-ACCOUNT-NAME.auth0.com/"
+      x-google-jwks_uri: "https://YOUR-ACCOUNT-NAME.auth0.com/.well-known/jwks.json"
+      # Optional. Replace YOUR-CLIENT-ID with your client ID
+      x-google-audiences: "YOUR-CLIENT-ID"
+security:
+  - {}
+  - apiKeyHeader: []
+  # - auth0_jwk: []
+tags:
+  - description: Hugging Face Text Generation Inference API
+    name: Text Generation Inference
+x-components: {}

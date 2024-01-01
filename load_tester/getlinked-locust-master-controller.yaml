@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
         - name: getlinked-locust-master
-          image: gcr.io/plasma-shift-409609/getlinked-locust-tester:latest
+          image: gcr.io/PROJECT-ID/getlinked-locust-tester:latest
           env:
             - name: LOCUST_MODE
               value: master

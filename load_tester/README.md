@@ -49,14 +49,14 @@ gcloud container clusters create $CLUSTER \
 Apply the Kubernetes configuration to deploy the Locust master.
 
 ```bash
-kubectl apply -f kubernetes-config/getlinked-locust-master-controller.yaml
+kubectl apply -f getlinked-locust-master-controller.yaml
 ```
 
 ### 5. Set Up Locust Master Service
 Deploy the Locust master service for external access.
 
 ```bash
-kubectl apply -f kubernetes-config/getlinked-locust-master-service.yaml
+kubectl apply -f getlinked-locust-master-service.yaml
 ```
 
 ### 6. Retrieve External IP
@@ -70,7 +70,7 @@ kubectl get svc locust-master
 Deploy the Locust worker controllers for distributed load testing.
 
 ```bash
-kubectl apply -f kubernetes-config/getlinked-locust-worker-controller.yaml
+kubectl apply -f getlinked-locust-worker-controller.yaml
 ```
 
 ### 8. Access the Locust Web Interface

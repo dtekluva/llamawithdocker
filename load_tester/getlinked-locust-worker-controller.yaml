@@ -16,11 +16,11 @@ spec:
     spec:
       containers:
         - name: getlinked-locust-worker
-          image: gcr.io/plasma-shift-409609/getlinked-locust-tester:latest
+          image: gcr.io/PROJECT-ID/getlinked-locust-tester:latest
           env:
             - name: LOCUST_MODE
               value: worker
             - name: LOCUST_MASTER
-              value: locust-master
+              value: getlinked-locust-master
             - name: TARGET_HOST
               value: $TARGET

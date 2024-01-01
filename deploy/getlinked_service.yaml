@@ -8,5 +8,7 @@ spec:
   ports:
   - port: 80
     targetPort: 8081
+    protocol: TCP
+    name: http
   selector:
     app: getlinked-mistral-7b

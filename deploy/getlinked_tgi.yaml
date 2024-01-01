@@ -8,7 +8,10 @@ info:
     url: 'https://www.apache.org/licenses/LICENSE-2.0'
   title: GetLinked Text Generation Inference Server
   version: 0.6.0
-host: "getlinked-api.endpoints.plasma-shift-409609.cloud.goog"
+host: "SERVICE-NAME"
+x-google-endpoints:
+- name: "SERVICE-NAME"
+  target: "EXTERNAL-IP"
 paths:
   /:
     post:
@@ -519,7 +522,6 @@ securityDefinitions:
       # Optional. Replace YOUR-CLIENT-ID with your client ID
       x-google-audiences: "YOUR-CLIENT-ID"
 security:
-  - {}
   - apiKeyHeader: []
   # - auth0_jwk: []
 tags:

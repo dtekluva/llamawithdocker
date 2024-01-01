@@ -19,37 +19,33 @@ spec:
         args: [
           "--http_port=8081",
           "--backend=127.0.0.1:8080",
-          "--service=getlinked-api.endpoints.plasma-shift-409609.cloud.goog",
+          "--service=SERVICE-NAME",
           "--rollout_strategy=managed",
         ]
         ports:
         - containerPort: 8081
-      # - name: getlinked-mistral-7b
-      #   image: ghcr.io/huggingface/text-generation-inference:1.1.1
-      #   resources:
-      #     limits:
-      #       nvidia.com/gpu: '1'
-      #   ports:
-      #   - name: server-port
-      #     containerPort: 8080
-      #   env:
-      #   - name: MODEL_ID
-      #     value: mistralai/Mistral-7B-Instruct-v0.1
-      #   - name: NUM_SHARD
-      #     value: "1"
-      #   - name: PORT 
-      #     value: "8080"
-      #   - name: QUANTIZE
-      #     value: bitsandbytes-nf4
-      #   volumeMounts:
-      #     - mountPath: /dev/shm
-      #       name: dshm
-      #     - mountPath: /data
-      #       name: data
       - name: getlinked-mistral-7b
-        image: gcr.io/endpoints-release/echo-python:1.0
+        image: ghcr.io/huggingface/text-generation-inference:1.1.1
+        resources:
+          limits:
+            nvidia.com/gpu: '1'
         ports:
-        - containerPort: 8080
+        - name: server-port
+          containerPort: 8080
+        env:
+        - name: MODEL_ID
+          value: mistralai/Mistral-7B-Instruct-v0.1
+        - name: NUM_SHARD
+          value: "1"
+        - name: PORT 
+          value: "8080"
+        - name: QUANTIZE
+          value: bitsandbytes-nf4
+        volumeMounts:
+          - mountPath: /dev/shm
+            name: dshm
+          - mountPath: /data
+            name: data
       volumes:
          - name: dshm
            emptyDir:
@@ -59,6 +55,6 @@ spec:
             path: /mnt/stateful_partition/kube-ephemeral-ssd/mistral-data
       serviceAccountName: getlinked-ksa
       nodeSelector:
-        # cloud.google.com/gke-accelerator: nvidia-l4
+        cloud.google.com/gke-accelerator: nvidia-l4
         cloud.google.com/gke-ephemeral-storage-local-ssd: "true"
         iam.gke.io/gke-metadata-server-enabled: "true"            
